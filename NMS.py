@@ -3,8 +3,10 @@ import numpy as np
 import time
 from config import firebaseConfig
 import pyrebase
+from face_lib import face_lib
 
-thres = 0.55  # Threshold to detect object
+FL = face_lib()
+thres = 0.60  # Threshold to detect object
 nms_threshold = 0.2
 cap = cv2.VideoCapture(0) #"C://Users//Muhammad Uzair//Desktop//la.mp4")
 cap.set(3,1280)
@@ -48,26 +50,27 @@ pTime = time.time()
 
 while True:
         success, img = cap.read()
+        no_of_faces, faces_coors = FL.faces_locations(img)
         classIds, confs, bbox = net.detect(img, confThreshold=thres)
         bbox = list(bbox)
         confs = list(np.array(confs).reshape(1, -1) [0])
         confs = list(map(float, confs))
         indices = cv2.dnn.NMSBoxes(bbox, confs, thres, nms_threshold)
 
+        no_of_faces, faces_coors = FL.faces_locations(img)
+        print(faces_coors)
         cTime = time.time()
 
         fps = 1 / (cTime - pTime)
         pTime = cTime
-        print(fps)
-        print(confs)
+        print(fps,"FPS")
+        # print(confs)
         for i in indices:
-
-            i = i[0]
 
             box = bbox[i]
             x, y, w, h = box[0],box[1],box[2],box[3]
             cv2.rectangle(img, (x, y), (x + w, h + y), (255, 0, 222),2)
-            cv2.putText(img,classNames[classIds[i][0]-1].upper(),(box[0]+10,box[1]+30),cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(img,classNames[classIds[i]-1].upper(),(box[0]+10,box[1]+30),cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
 
         cv2.imshow("Output", img)
         cv2.waitKey(1)
