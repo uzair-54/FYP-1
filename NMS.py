@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import time
 import helperFunctions as hf
+from face_lib import face_lib
+FL = face_lib()
 
 thres = 0.60  # Threshold to detect object
 nms_threshold = 0.2
@@ -44,7 +46,7 @@ def face_data(image):
 
     return face_width
 
-ref_image = cv2.imread("ref_image.png")
+ref_image = cv2.imread("bb.jpg")
 
 ref_image_face_width = face_data(ref_image)
 
@@ -89,9 +91,11 @@ elif opt == "2":
                 x, y, w, h = box[0],box[1],box[2],box[3]
                 # hf.getFace(x,y,w,h,img)
 
-                cv2.rectangle(img, (x, y), (x + w, h + y), (25, 25, 222),2)
-                cv2.putText(img,classNames[classIds[i]-1].upper(),(box[0]+10,box[1]+30),cv2.FONT_HERSHEY_COMPLEX, 1, (255, 55, 255), 2)
-
+                # cv2.rectangle(img, (x, y), (x + w, h + y), (25, 25, 222),2)
+                # cv2.putText(img,classNames[classIds[i]-1].upper(),(box[0]+10,box[1]+30),cv2.FONT_HERSHEY_COMPLEX, 1, (255, 55, 255), 2)
+                if FL.recognition_pipeline(ref_image,img)[0]:
+                    cv2.rectangle(img, (x, y), (x + w, h + y), (0, 128, 0),2)
+                    cv2.putText(img,classNames[classIds[i]-1].upper(),(box[0]+10,box[1]+30),cv2.FONT_HERSHEY_COMPLEX, 1, (255, 55, 255), 2)
                 face_width_in_frame = face_data(img)
 
                 if face_width_in_frame != 0:
