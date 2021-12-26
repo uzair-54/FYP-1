@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time
 import helperFunctions as hf
+import carControl as cc
 from face_lib import face_lib
 FL = face_lib()
 
@@ -100,6 +101,10 @@ elif opt == "2":
 
                 if face_width_in_frame != 0:
                     Distance = Distance_finder(Focal_length_found, Known_width, face_width_in_frame)
+                    if Distance > 100:
+                        cc.forward()
+                    else:
+                        cc.backward()
 
                     cv2.putText(
                         img, f"Distance: {round(Distance, 2)} CM", (30, 35), cv2.FONT_HERSHEY_COMPLEX, 0.6, (255, 55, 255), 2)
