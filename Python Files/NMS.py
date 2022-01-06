@@ -21,19 +21,17 @@ net.setInputScale(0.5 / 127.5)
 net.setInputMean((127.5, 127.5, 127.5))
 net.setInputSwapRB(True)
 
-firebase, auth = hf.fireBaseConfigSetup()
-
 opt = input("1) Create account \n2) Login \n")
 
 email = input("Enter your email: ")
 password = input("Enter your password: ")
 
 if opt == "1":
-    auth.create_user_with_email_and_password(email,password)
+    hf.auth.create_user_with_email_and_password(email,password)
     print("account created use the services")
 
 elif opt == "2":
-    auth.sign_in_with_email_and_password(email, password)
+    hf.auth.sign_in_with_email_and_password(email, password)
     print("Logged in")
 
     pTime = time.time()

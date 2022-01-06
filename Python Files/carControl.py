@@ -40,12 +40,6 @@ print("f-forward s-stop l-leftTurn r-rightTurn")
 print("\n")    
 
 sleepingTime = 0.5
-def forward():
-        GPIO.output(in1,GPIO.LOW)
-        GPIO.output(in2,GPIO.HIGH)
-        GPIO.output(in3,GPIO.LOW)
-        GPIO.output(in4,GPIO.HIGH)
-        sleep(sleepingTime)
 
 def stop():
         GPIO.output(in1,GPIO.LOW)
@@ -53,12 +47,22 @@ def stop():
         GPIO.output(in3,GPIO.LOW)
         GPIO.output(in4,GPIO.LOW)
 
+def forward():
+        GPIO.output(in1,GPIO.LOW)
+        GPIO.output(in2,GPIO.HIGH)
+        GPIO.output(in3,GPIO.LOW)
+        GPIO.output(in4,GPIO.HIGH)
+        sleep(sleepingTime)
+        stop()
+
 def left():
         GPIO.output(in1,GPIO.LOW)
         GPIO.output(in2,GPIO.HIGH)
         GPIO.output(in3,GPIO.LOW)
         GPIO.output(in4,GPIO.LOW)
         sleep(sleepingTime)
+        stop()
+
 
 def right():
         GPIO.output(in1,GPIO.LOW)
@@ -66,6 +70,8 @@ def right():
         GPIO.output(in3,GPIO.LOW)
         GPIO.output(in4,GPIO.HIGH)  
         sleep(sleepingTime)
+        stop()
+
 
 def backward():
         GPIO.output(in1,GPIO.HIGH)
@@ -73,6 +79,9 @@ def backward():
         GPIO.output(in3,GPIO.HIGH)
         GPIO.output(in4,GPIO.LOW)
         sleep(sleepingTime)
+        stop()
+
+
 
 # while(1):
 #     x = getch()

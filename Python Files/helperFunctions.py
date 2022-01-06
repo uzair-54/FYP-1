@@ -10,6 +10,8 @@ def fireBaseConfigSetup():
     auth = firebase.auth()
     return firebase, auth
 
+firebase, auth = fireBaseConfigSetup()
+
 def getFace(x, y, w, h, img):
     roi = img[y:y + h, x:x + w]
     no_of_faces, faces_coors = FL.faces_locations(roi)
@@ -41,7 +43,7 @@ def distanceFinder(Focal_Length, real_face_width, face_width_in_frame):
     distance = (real_face_width * Focal_Length) / face_width_in_frame
     return distance
 
-face_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+face_detector = cv2.CascadeClassifier("additional Files//haarcascade_frontalface_default.xml")
 
 def faceData(image):
     face_width = 0
@@ -55,7 +57,7 @@ def faceData(image):
 
     return face_width
 
-ref_image = cv2.imread("bb.jpg")
+ref_image = cv2.imread("pics//bb.jpg")
 
 ref_image_face_width = faceData(ref_image)
 
