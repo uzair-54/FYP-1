@@ -1,9 +1,6 @@
 import pyrebase
 from config import firebaseConfig
-from face_lib import face_lib
 import cv2
-
-FL = face_lib()
 
 def fireBaseConfigSetup():
     firebase = pyrebase.initialize_app(firebaseConfig)

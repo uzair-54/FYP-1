@@ -2,9 +2,7 @@ import cv2
 import numpy as np
 import time
 import helperFunctions as hf
-# import carControl as cc
-from face_lib import face_lib
-FL = face_lib()
+import carControl as cc
 
 thres = 0.60  # Threshold to detect object
 nms_threshold = 0.2
@@ -66,10 +64,10 @@ elif opt == "2":
                 if faceWidthInFrame != 0:
                     distance = hf.distanceFinder(hf.focallengthFound, hf.knownWidth, faceWidthInFrame)
                     if (distance > 100):
-                        # cc.forward()
+                        cc.forward()
                         print("f")
                     elif (distance < 50):
-                        # cc.backward()
+                        cc.backward()
                         print("b")
 
                     cv2.putText(
