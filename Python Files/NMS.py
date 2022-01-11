@@ -18,60 +18,40 @@ net.setInputSize(320, 320)
 net.setInputScale(0.5 / 127.5)
 net.setInputMean((127.5, 127.5, 127.5))
 net.setInputSwapRB(True)
+pTime = time.time()
 
-opt = input("1) Create account \n2) Login \n")
+while True:
+    success, img = cap.read()
+    classIds, confs, bbox = net.detect(img, confThreshold=thres)
+    bbox = list(bbox)
+    confs = list(np.array(confs).reshape(1, -1)[0])
+    confs = list(map(float, confs))
+    indices = cv2.dnn.NMSBoxes(bbox, confs, thres, nms_threshold)
 
-email = input("Enter your email: ")
-password = input("Enter your password: ")
+    cTime = time.time()
 
-if opt == "1":
-    hf.auth.create_user_with_email_and_password(email,password)
-    print("account created use the services")
+    fps = 1 / (cTime - pTime)
+    pTime = cTime
+    # print(fps,"FPS")
+    # print(confs)
+    for i in indices:
 
-elif opt == "2":
-    hf.auth.sign_in_with_email_and_password(email, password)
-    print("Logged in")
+        box = bbox[i]
+        x, y, w, h = box[0], box[1], box[2], box[3]
 
-    pTime = time.time()
+        faceWidthInFrame = hf.faceData(img)
 
-    while True:
-            success, img = cap.read()
-            classIds, confs, bbox = net.detect(img, confThreshold=thres)
-            bbox = list(bbox)
-            confs = list(np.array(confs).reshape(1, -1) [0])
-            confs = list(map(float, confs))
-            indices = cv2.dnn.NMSBoxes(bbox, confs, thres, nms_threshold)
+        if faceWidthInFrame != 0:
+            distance = hf.distanceFinder(hf.focallengthFound, hf.knownWidth, faceWidthInFrame)
+            if (distance > 100):
+                cc.forward()
+                print("f")
+            elif (distance < 50):
+                cc.backward()
+                print("b")
 
-            cTime = time.time()
+            cv2.putText(
+                img, f"Distance: {round(distance, 2)} CM", (30, 35), cv2.FONT_HERSHEY_COMPLEX, 0.6, (255, 55, 255), 2)
 
-            fps = 1 / (cTime - pTime)
-            pTime = cTime
-            # print(fps,"FPS")
-            # print(confs)
-            for i in indices:
-
-                box = bbox[i]
-                x, y, w, h = box[0],box[1],box[2],box[3]
-
-                # cv2.rectangle(img, (x, y), (x + w, h + y), (25, 25, 222),2)
-                # cv2.putText(img,classNames[classIds[i]-1].upper(),(box[0]+10,box[1]+30),cv2.FONT_HERSHEY_COMPLEX, 1, (255, 55, 255), 2)
-
-                # if FL.recognition_pipeline(ref_image,img)[0]:
-                #     cv2.rectangle(img, (x, y), (x + w, h + y), (0, 128, 0),2)
-                #     cv2.putText(img,classNames[classIds[i]-1].upper(),(box[0]+10,box[1]+30),cv2.FONT_HERSHEY_COMPLEX, 1, (255, 55, 255), 2)
-                faceWidthInFrame = hf.faceData(img)
-
-                if faceWidthInFrame != 0:
-                    distance = hf.distanceFinder(hf.focallengthFound, hf.knownWidth, faceWidthInFrame)
-                    if (distance > 100):
-                        cc.forward()
-                        print("f")
-                    elif (distance < 50):
-                        cc.backward()
-                        print("b")
-
-                    cv2.putText(
-                        img, f"Distance: {round(distance, 2)} CM", (30, 35), cv2.FONT_HERSHEY_COMPLEX, 0.6, (255, 55, 255), 2)
-
-            cv2.imshow("Output", img)
-            cv2.waitKey(1)
+    cv2.imshow("Output", img)
+    cv2.waitKey(1)

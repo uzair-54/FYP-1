@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import helperFunctions as hf
+import os
 
 class Ui_loginScreen(object):
 
@@ -9,6 +10,8 @@ class Ui_loginScreen(object):
 
         hf.auth.sign_in_with_email_and_password(email, password)
         print("logged in")
+        os.system("python NMS.py")
+
 
     def setupUi(self, loginScreen):
         loginScreen.setObjectName("loginScreen")
